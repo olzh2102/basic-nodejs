@@ -2,11 +2,17 @@ const { join } = require('path')
 const { createReadStream, createWriteStream } = require('fs')
 const { pipeline } = require('stream')
 
-const parse = require('./parser')
-const cipher = require('./cipher')
 const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
 
-const { input, output, pattern } = parse(process.argv)
+const parse = require('./parser')
+const cipher = require('./cipher')
+const validate = require('./validation')
+
+const { input, output, pattern, flags = {} } = parse(process.argv)
+validate({ flags, pattern }, () => {
+    process.stderr.write('Invalid pattern')
+    process.exit(-1)
+})
 
 const rStream = input 
     ? createReadStream(join(__dirname, input), 'utf8') 
