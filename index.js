@@ -5,8 +5,7 @@ const { pipeline } = require('stream')
 const parse = require('./parser');
 const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
 
-const args = process.argv.slice(2)
-const { input, output, pattern } = parse(args)
+const { input, output, pattern } = parse(process.argv)
 
 const rStream = input 
     ? createReadStream(join(__dirname, input), 'utf8') 
