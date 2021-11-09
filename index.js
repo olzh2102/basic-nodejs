@@ -1,8 +1,9 @@
 const { join } = require('path')
 const { createReadStream, createWriteStream } = require('fs')
+const { pipeline } = require('stream')
 
-const CustomTransformStream = require('./transformer')
 const parse = require('./parser');
+const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
 
 const args = process.argv.slice(2)
 const { input, output, pattern } = parse(args)
@@ -15,8 +16,24 @@ const wStream = output
     ? createWriteStream(join(__dirname, output))
     : process.stdout
 
-const tStream = new CustomTransformStream(pattern)
+const tStreams = pattern.split('-').map(generateStream)
 
-rStream
-    .pipe(tStream)
-    .pipe(wStream)
+pipeline(
+    rStream,
+    ...tStreams,
+    wStream,
+    (err) => {
+        console.error(err)
+    }
+)
+
+// * ============================
+function generateStream(cipher) {
+    return {
+        'C1': new CaesarTransform('C1'),
+        'C0': new CaesarTransform('C0'),
+        'R1': new Rot8Transform('R1'),
+        'R0': new Rot8Transform('R0'),
+        'A': new AtbashTransform('A')
+    }[cipher]
+}

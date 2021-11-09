@@ -9,22 +9,53 @@ const map = {
     'R1': cipher(8),
     'A': cipher('atb')
 }
-
-class CustomTransform extends Transform {
-    constructor(pattern) {
+class CaesarTransform extends Transform {
+    constructor(type) {
         super()
-        this.pattern = pattern
+        this.type = type
     }
 
     _transform(chunk, _, cb) {
         let res = String(chunk)
+        res = map[this.type](res)
 
-        for (let cipher of this.pattern.split('-')) 
-            res = map[cipher](res)
+        this.push(res)
+        cb()
+    }
+}
+
+class Rot8Transform extends Transform {
+    constructor(cipherType) { 
+        super() 
+        this.cipherType = cipherType
+    }
+
+    _transform(chunk, _, cb) {
+        let res = String(chunk)
+        res = map[this.cipherType](res)
         
         this.push(res)
         cb()
     }
 }
 
-module.exports = CustomTransform
+class AtbashTransform extends Transform {
+    constructor(cipherType) { 
+        super() 
+        this.cipherType = cipherType
+    }
+
+    _transform(chunk, _, cb) {
+        let res = String(chunk)
+        res = map[this.cipherType](res)
+        
+        this.push(res)
+        cb()
+    }
+}
+
+module.exports = {
+    CaesarTransform,
+    Rot8Transform,
+    AtbashTransform
+}
