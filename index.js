@@ -23,7 +23,10 @@ pipeline(
     ...tStreams,
     wStream,
     (err) => {
-        console.error(err)
+        if (err) 
+            console.error('Pipeline failed.', err);
+        else 
+            console.log('Pipeline succeeded.');
     }
 )
 
