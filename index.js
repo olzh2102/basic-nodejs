@@ -2,7 +2,8 @@ const { join } = require('path')
 const { createReadStream, createWriteStream } = require('fs')
 const { pipeline } = require('stream')
 
-const parse = require('./parser');
+const parse = require('./parser')
+const cipher = require('./cipher')
 const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
 
 const { input, output, pattern } = parse(process.argv)
@@ -21,21 +22,23 @@ pipeline(
     rStream,
     ...tStreams,
     wStream,
-    (err) => {
-        if (err) 
-            console.error('Pipeline failed.', err);
-        else 
-            console.log('Pipeline succeeded.');
-    }
+    handleError
 )
 
 // * ============================
-function generateStream(cipher) {
+function generateStream(type) {
     return {
-        'C1': new CaesarTransform('C1'),
-        'C0': new CaesarTransform('C0'),
-        'R1': new Rot8Transform('R1'),
-        'R0': new Rot8Transform('R0'),
-        'A': new AtbashTransform('A')
-    }[cipher]
+        'C1': new CaesarTransform(cipher(1)),
+        'C0': new CaesarTransform(cipher(-1)),
+        'R1': new Rot8Transform(cipher(8)),
+        'R0': new Rot8Transform(cipher(-8)),
+        'A': new AtbashTransform(cipher('atb'))
+    }[type]
+}
+
+function handleError(error) {
+    if (error)
+        console.error('Pipeline failed.', error)
+    else
+        console.log('Pipeline succeeded.');
 }

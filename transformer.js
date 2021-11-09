@@ -1,55 +1,39 @@
 const { Transform } = require('stream');
-
-const cipher = require('./cipher')
-
-const map = {
-    'C1': cipher(1),
-    'C0': cipher(-1),
-    'R0': cipher(-8),
-    'R1': cipher(8),
-    'A': cipher('atb')
-}
 class CaesarTransform extends Transform {
-    constructor(type) {
+    constructor(transformerFn) {
         super()
-        this.type = type
+        this.transformerFn = transformerFn
     }
 
     _transform(chunk, _, cb) {
-        let res = String(chunk)
-        res = map[this.type](res)
-
-        this.push(res)
+        let text = this.transformerFn(String(chunk))
+        this.push(text)
         cb()
     }
 }
 
 class Rot8Transform extends Transform {
-    constructor(cipherType) { 
+    constructor(transformerFn) { 
         super() 
-        this.cipherType = cipherType
+        this.transformerFn = transformerFn
     }
 
     _transform(chunk, _, cb) {
-        let res = String(chunk)
-        res = map[this.cipherType](res)
-        
-        this.push(res)
+        let text = this.transformerFn(String(chunk))
+        this.push(text)
         cb()
     }
 }
 
 class AtbashTransform extends Transform {
-    constructor(cipherType) { 
+    constructor(transformerFn) { 
         super() 
-        this.cipherType = cipherType
+        this.transformerFn = transformerFn
     }
 
     _transform(chunk, _, cb) {
-        let res = String(chunk)
-        res = map[this.cipherType](res)
-        
-        this.push(res)
+        let text = this.transformerFn(String(chunk))
+        this.push(text)
         cb()
     }
 }
