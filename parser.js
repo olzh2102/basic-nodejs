@@ -1,8 +1,10 @@
 const { ALLOWED_FLAGS } = require('./constants')
 
 function parse(args) {
-    if (args.length <= 2)
-        throw new Error('run with -c flag followed by cipher pattern. E.g.: -c C1-R0-A')
+    if (args.length <= 2) {
+        process.stderr.write('run with -c flag followed by cipher pattern. E.g.: -c C1-R0-A')
+        process.exit(-1)
+    }
 
     let cFlagIndex = args.findIndex((o) => o == '-c'),
         iFlagIndex = args.findIndex((o) => o == '-i'),
