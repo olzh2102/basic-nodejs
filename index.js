@@ -3,24 +3,25 @@ const { createReadStream, createWriteStream } = require('fs')
 const { pipeline } = require('stream')
 
 const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
+const createCustomReadStream = require('./readable-stream')
 
 const parse = require('./parser')
 const cipher = require('./cipher')
 const validate = require('./validation')
 const { handleError } = require('./utils')
 
-const { input, output, pattern, flags = {} } = parse(process.argv)
+const { input, output, pattern, flags } = parse(process.argv)
 validate({ flags, pattern }, (errMessage) => {
     process.stderr.write(`Invalid pattern: ${errMessage}`)
     process.exit(1)
 })
-
 const rStream = input 
-    ? createReadStream(join(__dirname, input), 'utf8') 
+    // ? createReadStream(join(__dirname, input), 'utf8') 
+    ? createCustomReadStream(join(__dirname, input))
     : process.stdin
 
 const wStream = output 
-    ? createWriteStream(join(__dirname, output))
+    ? createWriteStream(join(__dirname, output), { flags: 'a' })
     : process.stdout
 
 const tStreams = pattern
