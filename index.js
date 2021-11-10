@@ -7,11 +7,12 @@ const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transform
 const parse = require('./parser')
 const cipher = require('./cipher')
 const validate = require('./validation')
+const { handleError } = require('./utils')
 
 const { input, output, pattern, flags = {} } = parse(process.argv)
-validate({ flags, pattern }, () => {
-    process.stderr.write('Invalid pattern')
-    process.exit(-1)
+validate({ flags, pattern }, (errMessage) => {
+    process.stderr.write(`Invalid pattern: ${errMessage}`)
+    process.exit(1)
 })
 
 const rStream = input 
@@ -22,16 +23,10 @@ const wStream = output
     ? createWriteStream(join(__dirname, output))
     : process.stdout
 
-const tStreams = pattern.split('-').map(generateStream)
+const tStreams = pattern
+    .split('-')
+    .map(generateStream)
 
-pipeline(
-    rStream,
-    ...tStreams,
-    wStream,
-    handleError
-)
-
-// * ============================
 function generateStream(type) {
     return {
         'C1': new CaesarTransform(cipher(1)),
@@ -42,9 +37,9 @@ function generateStream(type) {
     }[type]
 }
 
-function handleError(error) {
-    if (error)
-        console.error('Pipeline failed.', error)
-    else
-        console.log('Pipeline succeeded.');
-}
+pipeline(
+    rStream,
+    ...tStreams,
+    wStream,
+    handleError
+)

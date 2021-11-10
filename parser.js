@@ -8,12 +8,15 @@ function parse(args) {
 
     args = process.argv.slice(2)
 
-    if (args.filter(flag => flag == '-c').length >= 2) {
+    if (
+        args.filter(flag => flag == '-c').length >= 2 ||
+        args.filter(flag => flag == '--config').length >= 2
+    ) {
         process.stderr.write('Config flag appeared more than once. Please run with one "-c" or "--config"')
         process.exit(-1)
     }
 
-    let cFlagIndex = args.findIndex((o) => o == '-c'),
+    let cFlagIndex = args.findIndex((o) => o == '-c' || o == '--config'),
         iFlagIndex = args.findIndex((o) => o == '-i'),
         oFlagIndex = args.findIndex((o) => o == '-o')
 
