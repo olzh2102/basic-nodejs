@@ -1,12 +1,15 @@
-const { ALLOWED_FLAGS } = require('./constants')
+const {ALLOWED_FLAGS} = require('./constants')
+const {RepeatedArgumentError} = require('./custom-errors')
+const {errorHandler} = require('./utils')
 
 function parse(args) {
-    if (args.length <= 2) {
-        process.stderr.write('Run with -c flag followed by cipher pattern. E.g.: -c C1-R0-A')
-        process.exit(-1)
-    }
+    const cFlags = args.filter((arg) => arg == '-c' || arg == '--config')
 
-    args = process.argv.slice(2)
+    try {
+        if (cFlags.length >= 2) throw new RepeatedArgumentError('Config flag is repeated more than once!')
+    } catch (e) {
+        errorHandler(e)
+    }
 
     // if (
     //     args.filter((flag) => flag == '-c').length >= 2 ||

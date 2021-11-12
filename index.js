@@ -1,35 +1,43 @@
 const { join } = require('path')
 const { pipeline } = require('stream')
+const { createWriteStream, createReadStream } = require('fs')
 
-const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
-const createCustomReadStream = require('./readable-stream')
-const createCustomWriteStream = require('./writable-stream')
-const InvalidCipherPatternError = require('./custom-errors');
+const {createCustomReadStream, createCustomWriteStream} = require('./custom-streams')
+const {InvalidCipherPatternError} = require('./custom-errors');
+const { 
+    CaesarTransform, 
+    Rot8Transform,
+    AtbashTransform 
+} = require('./transformer')
+const cipher = require('./cipher')
 
 const parse = require('./parser')
-const cipher = require('./cipher')
 const validate = require('./validation')
-const { handleError, errorHandler } = require('./utils')
+const {TR_STREAMS_MAP} = require('./constants')
+const {handleError, errorHandler} = require('./utils')
 
-const { input, output, pattern, flags } = parse(process.argv)
+if (process.argv <= 2) {
+    process.stderr.write('Run with -c flag followed by cipher pattern. E.g.: -c C1-R0-A')
+    process.exit(1)
+}
+
+const { input, output, pattern, flags } = parse(process.argv.slice(2))
+
 // validate({ flags, pattern }, (errMessage) => {
 //     process.stderr.write(`Invalid pattern: ${errMessage}`)
-//     process.exit(1)
+//     process.exitCode = 1
 // })
 const rStream = input 
     ? createCustomReadStream(join(__dirname, input))
     : process.stdin
 
 const wStream = output 
-    ? createCustomWriteStream(join(__dirname, output))
+    ? createCustomWriteStream(join(__dirname, output), { flags: 'a' })
     : process.stdout
 
 const tStreams = pattern
     .split('-')
-    .map((type) => {
-        try { generateStream(type) } 
-        catch(e) { errorHandler(e) }
-    })
+    .map(generateStream)
 
 function generateStream(type) {
     const map = {
@@ -40,9 +48,14 @@ function generateStream(type) {
         'A': new AtbashTransform(cipher('atb'))
     }
 
-    if (!(type in map)) throw new InvalidCipherPatternError('Pattern is incorrect!')
-    
-    return map[type]
+    try { 
+        if (!(type in map)) 
+            throw new InvalidCipherPatternError('Pattern is incorrect!')
+        
+        return map[type]
+    } catch (e) { 
+        errorHandler(e) 
+    } 
 }
 
 pipeline(

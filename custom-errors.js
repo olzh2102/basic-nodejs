@@ -6,4 +6,15 @@ class InvalidCipherPatternError extends Error {
     }
 }
 
-module.exports = InvalidCipherPatternError
+class RepeatedArgumentError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'RepeatedArgumentError'
+        this.isCustom = true
+    }
+}
+
+module.exports = {
+    InvalidCipherPatternError,
+    RepeatedArgumentError,
+}

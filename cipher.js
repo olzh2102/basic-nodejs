@@ -1,4 +1,5 @@
-const { aCode, ACode } = require('./constants');
+const aCode = 'a'.charCodeAt()
+const ACode = 'A'.charCodeAt()
 
 function cipher(shift) {
     return (text) => [...text].reduce((res, ch) => res.concat(replace(ch, shift)), '')
