@@ -4,6 +4,7 @@ const { pipeline } = require('stream')
 
 const { CaesarTransform, Rot8Transform, AtbashTransform } = require('./transformer')
 const createCustomReadStream = require('./readable-stream')
+const createCustomWriteStream = require('./writable-stream')
 
 const parse = require('./parser')
 const cipher = require('./cipher')
@@ -21,7 +22,8 @@ const rStream = input
     : process.stdin
 
 const wStream = output 
-    ? createWriteStream(join(__dirname, output), { flags: 'a' })
+    ? createCustomWriteStream(join(__dirname, output))
+    // ? createWriteStream(join(__dirname, output), { flags: 'a' })
     : process.stdout
 
 const tStreams = pattern
