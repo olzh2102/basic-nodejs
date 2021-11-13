@@ -25,7 +25,7 @@ function isFileAccessable(pathToFile, flag) {
             pathToFile, 
             flag == 'r' ? constants.R_OK : constants.W_OK, 
             (err) => {
-                if (err) reject(new NoSuchFileError(`Such a file does not exists!`))
+                if (err) reject(new NoSuchFileError(`Such a file does not exist: ${pathToFile}!`))
                 else resolve(true)
             }
             )
@@ -33,6 +33,9 @@ function isFileAccessable(pathToFile, flag) {
 }  
 
 function generateStream(type) {
+    if (type.startsWith('A') && type.length > 1)
+        throw new InvalidCipherPatternError('Atbash type cannot have any leading number or letter!')
+
     const map = {
         'C1': new CaesarTransform(cipher(1)),
         'C0': new CaesarTransform(cipher(-1)),
