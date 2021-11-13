@@ -14,7 +14,25 @@ class RepeatedArgumentError extends Error {
     }
 }
 
+class NoPermissionError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'NoPermissionError'
+        this.isCustom = true
+    }
+}
+
+class NoSuchFileError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'NoSuchFileError'
+        this.isCustom = true
+    }
+}
+
 module.exports = {
     InvalidCipherPatternError,
     RepeatedArgumentError,
+    NoPermissionError,
+    NoSuchFileError
 }
