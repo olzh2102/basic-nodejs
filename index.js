@@ -1,8 +1,8 @@
 const { pipeline } = require('stream')
+
 const parse = require('./parser')
 const {
-    errorHandler, 
-    handleError, 
+    errorHandler,  
     generateReadStream, 
     generateWriteStream, 
     generateStream 
@@ -13,7 +13,18 @@ if (process.argv.length <= 2) {
     process.exit(1)
 }
 
-let { input, output, pattern, flags } = parse(process.argv.slice(2))
+let input, output, pattern
+try {
+    const parsed = parse(process.argv.slice(2))
+    
+    if (parsed) {
+        input = parsed.input
+        output = parsed.output
+        pattern = parsed.pattern
+    }
+} catch (error) {
+    errorHandler(error)
+}
 
 async function run() {
     const rStream = typeof input === 'undefined' 
@@ -21,8 +32,8 @@ async function run() {
         : await generateReadStream(input)
 
     const wStream = typeof output === 'undefined'
-        ? generateWriteStream(input)
-        : process.stdout
+        ? process.stdout
+        : await generateWriteStream(output)
 
     const tStreams = pattern
         .split('-')
@@ -32,11 +43,13 @@ async function run() {
         rStream,
         ...tStreams,
         wStream,
-        handleError
+        (err) => {
+            if (err) console.error('Pipeline failed.', err)
+            else console.log('Pipeline succeeded.');
+        }
     )
 }
 
 run()
     .then((_) => console.log('Successful!'))
     .catch(errorHandler)
-

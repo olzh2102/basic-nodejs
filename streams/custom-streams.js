@@ -14,7 +14,7 @@ class CustomReadableStream extends Readable {
             (err, fd) => {
                 if (err) cb(err);
                 else { 
-                    this.fd = fd || process.stdin;
+                    this.fd = fd;
                     cb();
                 }
             }
@@ -30,7 +30,9 @@ class CustomReadableStream extends Readable {
             0,
             resource,
             null,
-            (_, bytesRead) => this.push(bytesRead > 0 ? buffer.slice(0, bytesRead) : null)
+            (_, bytesRead) => {
+                this.push(bytesRead > 0 ? buffer.slice(0, bytesRead) : null)
+            }
         )
     }
 }

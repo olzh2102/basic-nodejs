@@ -1,21 +1,14 @@
-const { accessSync, access, constants } = require('fs')
-const { NoSuchFileError } = require('./custom-errors')
-const {createCustomReadStream, createCustomWriteStream} = require('./custom-streams')
-const { join } = require('path')
-const cipher = require('./cipher')
+const {join} = require('path')
+const {access, constants} = require('fs')
 
+const {NoSuchFileError, InvalidCipherPatternError} = require('./custom-errors')
+const {createCustomReadStream, createCustomWriteStream} = require('./streams/custom-streams')
+const cipher = require('./cipher')
 const { 
     CaesarTransform, 
     Rot8Transform,
     AtbashTransform 
-} = require('./transformer')
-
-function handleError(error) {
-    if (error)
-        console.error('Pipeline failed.', error)
-    else
-        console.log('Pipeline succeeded.');
-}
+} = require('./streams/transformer')
 
 function errorHandler(err) {
     let { isCustom, name, message } = err
@@ -27,40 +20,17 @@ function errorHandler(err) {
 }
 
 function isFileAccessable(pathToFile, flag) {
-    console.log('pathToFile: ' + pathToFile)
     return new Promise((resolve, reject) => {
         access(
             pathToFile, 
             flag == 'r' ? constants.R_OK : constants.W_OK, 
             (err) => {
-                if (err)
-                    reject(new NoSuchFileError(`Such a file does not exists!`))
-                else
-                    resolve(true)
+                if (err) reject(new NoSuchFileError(`Such a file does not exists!`))
+                else resolve(true)
             }
-        )
-    })
-}
-
-async function generateReadStream(input) {
-    try {
-        const isAccessable = await isFileAccessable(input, 'r')
-        if (isAccessable)
-            return createCustomReadStream(join(__dirname, input))
-    } catch (error) {
-        errorHandler(error)
-    }
-}
-
-async function generateWriteStream(input) {
-    try {
-        const isAccessable = await isFileAccessable(input, 'w')
-        if (isAccessable)
-            return createCustomWriteStream(join(__dirname, output), { flags: 'a' })
-    } catch (error) {
-        errorHandler(error)
-    }
-}
+            )
+        })
+}  
 
 function generateStream(type) {
     const map = {
@@ -77,11 +47,38 @@ function generateStream(type) {
     return map[type]
 }
 
+function sanitize(arg) {
+    if (arg == '-c' || arg == '--config') return '-c'
+    if (arg == '-i' || arg == '--input') return '-i'
+    if (arg == '-o' || arg == '--output') return '-o'
+    else return arg
+}
+
+async function generateReadStream(input) {
+    try {
+        const isAccessable = await isFileAccessable(input, 'r')
+        if (isAccessable)
+            return createCustomReadStream(join(__dirname, input))
+    } catch (error) {
+        errorHandler(error)
+    }
+}
+
+async function generateWriteStream(output) {
+    try {
+        const isAccessable = await isFileAccessable(output, 'w')
+        if (isAccessable)
+            return createCustomWriteStream(join(__dirname, output), { flags: 'a' })
+    } catch (error) {
+        errorHandler(error)
+    }
+}
+
 module.exports = {
-    handleError,
     errorHandler,
     isFileAccessable,
     generateReadStream,
     generateWriteStream,
-    generateStream
+    generateStream,
+    sanitize
 }
