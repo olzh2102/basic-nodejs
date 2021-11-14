@@ -32,10 +32,13 @@ function isFileAccessable(pathToFile, flag) {
         })
 }  
 
-function generateStream(type) {
-    if (type.startsWith('A') && type.length > 1)
-        throw new InvalidCipherPatternError('Atbash type cannot have any leading number or letter!')
+function generateStream(mark) {
+    if (mark[0] == mark[0].toLowerCase())
+        throw new InvalidCipherPatternError('Any cipher type must start with capital letter: C or R or A!')
 
+    if (mark.startsWith('A') && mark.length > 1)
+        throw new InvalidCipherPatternError('Atbash type cannot have any leading number or letter!')
+    
     const map = {
         'C1': new CaesarTransform(cipher(1)),
         'C0': new CaesarTransform(cipher(-1)),
@@ -44,10 +47,10 @@ function generateStream(type) {
         'A': new AtbashTransform(cipher('atb'))
     }
 
-    if (!(type in map)) 
+    if (!(mark in map)) 
         throw new InvalidCipherPatternError('Pattern is incorrect!')
 
-    return map[type]
+    return map[mark]
 }
 
 function sanitize(arg) {
