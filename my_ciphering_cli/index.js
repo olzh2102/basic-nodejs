@@ -50,6 +50,4 @@ async function run() {
     )
 }
 
-run()
-    .then((_) => console.log('Successful!'))
-    .catch(errorHandler)
+run().catch(errorHandler)

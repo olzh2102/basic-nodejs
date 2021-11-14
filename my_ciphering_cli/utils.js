@@ -59,7 +59,7 @@ function sanitize(arg) {
 
 async function generateReadStream(input) {
     try {
-        const isAccessable = await isFileAccessable(input, 'r')
+        const isAccessable = await isFileAccessable(join(__dirname, input), 'r')
         if (isAccessable)
             return createCustomReadStream(join(__dirname, input))
     } catch (error) {
@@ -69,7 +69,7 @@ async function generateReadStream(input) {
 
 async function generateWriteStream(output) {
     try {
-        const isAccessable = await isFileAccessable(output, 'w')
+        const isAccessable = await isFileAccessable(join(__dirname, output), 'w')
         if (isAccessable)
             return createCustomWriteStream(join(__dirname, output), { flags: 'a' })
     } catch (error) {
