@@ -1,4 +1,4 @@
-const {RepeatedArgumentError} = require('./custom-errors')
+const {RepeatedArgumentError, NoValueFoundAfterFlagError} = require('./custom-errors')
 const {sanitize} = require('./utils')
 
 function parse(args) {
@@ -16,6 +16,12 @@ function parse(args) {
     let cFlagIndex = map['-c'],
         iFlagIndex = map['-i'],
         oFlagIndex = map['-o']
+
+    if (
+        cFlagIndex == sanitizedArgs.length - 1 ||
+        iFlagIndex == sanitizedArgs.length - 1 ||
+        oFlagIndex == sanitizedArgs.length - 1
+     ) throw new NoValueFoundAfterFlagError('No value provided after the flag!')
 
     return {
         pattern: sanitizedArgs[cFlagIndex + 1],

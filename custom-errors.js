@@ -6,6 +6,14 @@ class InvalidCipherPatternError extends Error {
     }
 }
 
+class NoValueFoundAfterFlagError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'NoValueFoundAfterFlagError'
+        this.isCustom = true
+    }
+}
+
 class RepeatedArgumentError extends Error {
     constructor(msg) {
         super(msg)
@@ -32,6 +40,7 @@ class NoSuchFileError extends Error {
 
 module.exports = {
     InvalidCipherPatternError,
+    NoValueFoundAfterFlagError,
     RepeatedArgumentError,
     NoPermissionError,
     NoSuchFileError
