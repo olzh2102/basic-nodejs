@@ -33,9 +33,6 @@ function isFileAccessable(pathToFile, flag) {
 }  
 
 function generateStream(mark) {
-    if (mark[0] == mark[0].toLowerCase())
-        throw new InvalidCipherPatternError('Any cipher type must start with capital letter: C or R or A!')
-
     if (mark.startsWith('A') && mark.length > 1)
         throw new InvalidCipherPatternError('Atbash type cannot have any leading number or letter!')
     
