@@ -1,0 +1,14 @@
+{
+  "name": "my_ciphering_cli",
+  "version": "1.0.0",
+  "description": "Ciphering CLI Tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.3.1"
+  }
+}
