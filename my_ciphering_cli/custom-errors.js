@@ -38,10 +38,19 @@ class NoSuchFileError extends Error {
     }
 }
 
+class NoConfigArgumentProvidedError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'NoConfigArgumentProvidedError'
+        this.isCustom = true
+    }
+}
+
 module.exports = {
     InvalidCipherPatternError,
     NoValueFoundAfterFlagError,
     RepeatedArgumentError,
     NoPermissionError,
-    NoSuchFileError
+    NoSuchFileError,
+    NoConfigArgumentProvidedError
 }

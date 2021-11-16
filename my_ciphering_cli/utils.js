@@ -9,6 +9,7 @@ const {
     Rot8Transform,
     AtbashTransform 
 } = require('./streams/transformer')
+const { CAESAR_SHIFT, ROT8_SHIFT, ATBASH_FLAG, MARKS } = require('./constants')
 
 function errorHandler(err) {
     let { isCustom, name, message } = err
@@ -37,11 +38,11 @@ function generateStream(mark) {
         throw new InvalidCipherPatternError('Atbash type cannot have any leading number or letter!')
     
     const map = {
-        'C1': new CaesarTransform(cipher(1)),
-        'C0': new CaesarTransform(cipher(-1)),
-        'R1': new Rot8Transform(cipher(8)),
-        'R0': new Rot8Transform(cipher(-8)),
-        'A': new AtbashTransform(cipher('atb'))
+        [MARKS.A]: new AtbashTransform(cipher(ATBASH_FLAG)),
+        [MARKS.C1]: new CaesarTransform(cipher(CAESAR_SHIFT.ENCODE)),
+        [MARKS.C0]: new CaesarTransform(cipher(CAESAR_SHIFT.DECODE)),
+        [MARKS.R1]: new Rot8Transform(cipher(ROT8_SHIFT.DECODE)),
+        [MARKS.R0]: new Rot8Transform(cipher(ROT8_SHIFT.ENCODE))
     }
 
     if (!(mark in map)) 

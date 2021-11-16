@@ -1,4 +1,4 @@
-const {RepeatedArgumentError, NoValueFoundAfterFlagError} = require('./custom-errors')
+const {RepeatedArgumentError, NoValueFoundAfterFlagError, NoConfigArgumentProvidedError} = require('./custom-errors')
 const {sanitize} = require('./utils')
 
 function parse(args) {
@@ -6,6 +6,9 @@ function parse(args) {
         throw new RepeatedArgumentError('Some arguments are repeated, please check!')
 
     const sanitizedArgs = args.map(sanitize)
+
+    if (sanitizedArgs.filter((arg) => arg == '-c').length == 0)
+        throw new NoConfigArgumentProvidedError('Could not find config flag to match the pattern!')
 
     let map = {}
     for (let i = 0; i < sanitizedArgs.length; i++)
