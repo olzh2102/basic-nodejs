@@ -1,5 +1,5 @@
 const parse = require('./parser')
-const { RepeatedArgumentError, NoValueFoundAfterFlagError } = require('./custom-errors')
+const { RepeatedArgumentError, NoValueFoundAfterFlagError, NoConfigArgumentProvidedError } = require('./custom-errors')
 
 describe('Parser', () => {
     it('returns expected inputPath, outputPath and cipher pattern', () => {
@@ -22,6 +22,19 @@ describe('Parser', () => {
         const args = ['-c', 'C1', '-i']
         const result = () => parse(args)
         expect(result).toThrowError(NoValueFoundAfterFlagError)
+    })
+
+    it('throws Error if no config flag provided', () => {
+        const args = ['C1', '-i', './input.txt']
+        const result = () => parse(args)
+        expect(result).toThrowError(NoConfigArgumentProvidedError)
+    })
+
+    it('throws Error if short and long aliases of the same config provided', () => {
+        const args = ['-c', 'C1', '--config', '-i', './input.txt']
+        const result = () => parse(args)
+        expect(result).toThrowError('-c is repeated, please check!')
+        expect(result).toThrowError(RepeatedArgumentError)
     })
 
     it.todo('throws Error if no config flag provided')

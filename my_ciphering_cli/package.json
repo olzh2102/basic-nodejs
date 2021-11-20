@@ -10,5 +10,21 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^27.3.1"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "./**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/coverage/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 85,
+        "lines": 70
+      }
+    },
+    "displayName": "CLI"
   }
 }
