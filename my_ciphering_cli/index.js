@@ -22,7 +22,7 @@ async function run() {
     const tStreams = pattern
         .split('-')
         .map(generateStream)
-
+    
     pipeline(
         rStream,
         ...tStreams,
@@ -30,9 +30,9 @@ async function run() {
         (err) => {
             if (err) {
                 process.stderr.write(err.message);
-                process.exit(EXIT_CODE);
+                process.exit(1);
             }
-
+            
             console.log('Pipeline succeeded.');
         }
     )

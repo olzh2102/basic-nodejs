@@ -60,16 +60,16 @@ describe('Utils', () => {
             const existingPathToFile = './input.txt'
             
             return expect(utils.isFileAccessable(existingPathToFile, 'r'))
-            .resolves
-            .toBe(true)
+                .resolves
+                .toBe(true)
         })
         
         it('throws error if passed path to file is not there', () => {
             const nonExistingPathToFile = './inpsdasdasdfastafs.txt'
             
             return expect(utils.isFileAccessable(nonExistingPathToFile, 'r'))
-            .rejects
-            .toThrowError(NoSuchFileError)
+                .rejects
+                .toThrowError(NoSuchFileError)
         })
     })
 
@@ -100,57 +100,6 @@ describe('Utils', () => {
 
         utils.isFileAccessable.mockRestore()
     })
-
-    // it('throws error if passed input path is incorrect', async () => {
-    //     const nonExistingPath = './idasdasdasnput.txt'
-    //     const isFileAccessable = jest
-    //         .spyOn(utils, 'isFileAccessable')
-    //         .mockRejectedValue(false)
-
-        
-    //     await isFileAccessable()
-    //     const result = await utils.generateReadStream(nonExistingPath)
-        
-    //     expect(createCustomReadStream).not.toHaveBeenCalled()
-
-    //     utils.isFileAccessable.mockRestore()
-    // })
-
-    // it('returns true if passed path to file is accessible', async () => {
-    //     class CustomRandomError extends Error {
-    //         constructor(msg) {
-    //             super(msg);
-    //             this.isCustom = true
-    //             this.name = 'CustomRandomError'
-    //         }
-    //     }
-
-    //     const error = new CustomRandomError('custom error message')
-
-    //     const nonExistingPath = './input.txt'
-
-    //     expect.assertions(1)
-    
-    //     const fn = jest
-    //         .spyOn(fs, 'access')
-    //         // .mockImplementationOnce(() => console.log('fuck'))
-    //         .mockImplementationOnce((path, mode, cb) => cb())
-
-
-    //     fn()
-    //     const result = async () => {
-    //         try {
-    //             await isFileAccessable('./inpsda.txt', 'r')
-    //         }  catch(e) {
-    //             expect(result).toThrow(e)
-    //         }
-    //     }
-
-    //     // const result = await isFileAccessable(nonExistingPath, 'r')
-
-    // })
-
-    it.todo('throws error if passed path does not exist or not accessible')
 
     it('generates stream if passed mark exists in lookup', () => {
         const AVAILABLE_MARKS = Object.keys(MARKS)

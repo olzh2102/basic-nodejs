@@ -5,18 +5,14 @@ class CustomReadableStream extends Readable {
     constructor(filename) {
         super()
         this.filename = filename
-        this.fd = null
+        this.fd = 0
     }
 
-    _construct(cb) {
+    _construct() {
         fs.open(
             this.filename, 
-            (err, fd) => {
-                if (err) cb(err);
-                else { 
-                    this.fd = fd;
-                    cb();
-                }
+            (_, fd) => {
+                this.fd = fd;
             }
         );
     }
