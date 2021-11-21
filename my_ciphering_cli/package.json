@@ -4,7 +4,7 @@
   "description": "Ciphering CLI Tool",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "author": "",
   "license": "ISC",

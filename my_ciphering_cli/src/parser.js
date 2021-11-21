@@ -1,5 +1,9 @@
-const {RepeatedArgumentError, NoValueFoundAfterFlagError, NoConfigArgumentProvidedError} = require('./custom-errors')
-const {sanitize} = require('./utils')
+const { sanitize } = require('./utils')
+const {
+    RepeatedArgumentError, 
+    NoValueFoundAfterFlagError, 
+    NoConfigArgumentProvidedError
+} = require('./custom-errors')
 
 function parse(args) {
     if (args.length == 2)

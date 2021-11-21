@@ -1,9 +1,10 @@
 const { CaesarTransform, Rot8Transform, AtbashTransform} = require('./transformer')
-const cipher = require('../cipher')
+const cipher = require('../src/cipher')
+const { CAESAR_SHIFT, ROT8_SHIFT, ATBASH_FLAG } = require('../src/constants')
 
 describe('Caesar', () => {
-    it("should use proper cipher C0", async () => {
-        const tStream = new CaesarTransform(cipher(-1));
+    it('transforms chunks with inner transformer function from constructor - Caesar', async () => {
+        const tStream = new CaesarTransform(cipher(CAESAR_SHIFT.DECODE));
         tStream._transform("works", "UTF-8", () => {});
     
         tStream.on("data", (data) => {
@@ -11,8 +12,8 @@ describe('Caesar', () => {
         });
     });
 
-    it("should use proper cipher C0", async () => {
-        const tStream = new Rot8Transform(cipher(-8));
+    it('transforms chunks with inner transformer function from constructor - ROT8', async () => {
+        const tStream = new Rot8Transform(cipher(ROT8_SHIFT.ENCODE));
         tStream._transform("works", "UTF-8", () => {});
     
         tStream.on("data", (data) => {
@@ -20,8 +21,8 @@ describe('Caesar', () => {
         });
     });
 
-    it("should use proper cipher C0", async () => {
-        const tStream = new AtbashTransform(cipher('atb'));
+    it('transforms chunks with inner transformer function from constructor - Atbash', async () => {
+        const tStream = new AtbashTransform(cipher(ATBASH_FLAG));
         tStream._transform("works", "UTF-8", () => {});
     
         tStream.on("data", (data) => {
