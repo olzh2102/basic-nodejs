@@ -73,3 +73,19 @@ $ node my_ciphering_cli -c "C1-R1-C0-C0-A-R0-R1-R1-A-C1" -i "./input.txt" -o "./
 
 > output.txt
 > `This is secret. Message about "_" symbol!`
+
+### Testing Commands To Run:
+
+```bash
+cd my_ciphering_cli
+```
+
+To run tests: 
+```bash
+npm test
+```
+
+To run tests with coverage:
+```bash
+npx jest --coverage
+```

@@ -5,18 +5,15 @@ class CustomReadableStream extends Readable {
     constructor(filename) {
         super()
         this.filename = filename
-        this.fd = null
+        this.fd = 0
     }
 
     _construct(cb) {
         fs.open(
             this.filename, 
-            (err, fd) => {
-                if (err) cb(err);
-                else { 
-                    this.fd = fd;
-                    cb();
-                }
+            (_, fd) => {
+                this.fd = fd;
+                cb();
             }
         );
     }
@@ -42,6 +39,7 @@ class CustomWritableStream extends Writable {
         super(filename)
         this.filename = filename
         this.appendFlag = options.flags
+        this.fd = 0
     }
 
     _construct(cb) {

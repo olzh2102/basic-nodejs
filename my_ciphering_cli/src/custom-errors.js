@@ -22,14 +22,6 @@ class RepeatedArgumentError extends Error {
     }
 }
 
-class NoPermissionError extends Error {
-    constructor(msg) {
-        super(msg)
-        this.name = 'NoPermissionError'
-        this.isCustom = true
-    }
-}
-
 class NoSuchFileError extends Error {
     constructor(msg) {
         super(msg)
@@ -38,10 +30,18 @@ class NoSuchFileError extends Error {
     }
 }
 
+class NoConfigArgumentProvidedError extends Error {
+    constructor(msg) {
+        super(msg)
+        this.name = 'NoConfigArgumentProvidedError'
+        this.isCustom = true
+    }
+}
+
 module.exports = {
     InvalidCipherPatternError,
     NoValueFoundAfterFlagError,
     RepeatedArgumentError,
-    NoPermissionError,
-    NoSuchFileError
+    NoSuchFileError,
+    NoConfigArgumentProvidedError
 }
